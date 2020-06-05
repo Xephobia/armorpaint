@@ -20,7 +20,7 @@ jobs:
     - name: kinc and compile
       run: cd Kromx && node Kinc/make -g opengl --compiler clang --compile
     - name: strip
-      run : cd Deployment && strip Krom
+      run : cd Kromx/Deployment && strip Krom
     - name: publish build
       uses: actions/upload-artifact@v2
       with:
