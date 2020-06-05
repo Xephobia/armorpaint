@@ -1,0 +1,28 @@
+name: Linux
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Get Submodules
+      run: git submodule update --init --recursive
+    - name: install deps
+      run: sudo apt install -y clang && sudo apt install -y make && sudo apt install -y g++ && sudo apt install -y libxinerama-dev && sudo apt install -y libasound2-dev && sudo apt install -y libxi-dev && sudo apt install -y mesa-common-dev && sudo apt install -y libgl-dev && sudo apt install -y libvulkan-dev
+    - name: setup Node.js
+      uses: actions/setup-node@v1.4.2
+    - name: Kromx
+      run: node Kromx/make -g opengl
+    - name: kinc and compile
+      run: cd Kromx && node Kinc/make -g opengl --compiler clang --compile
+    - name: strip
+      run : cd Deployment && strip Krom
+    - name: publish build
+      uses: actions/upload-artifact@v2
+      with:
+        name: armorpaint
+        path: Kromx/Deployment/
