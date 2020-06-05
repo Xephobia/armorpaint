@@ -26,3 +26,8 @@ jobs:
       with:
         name: armorpaint
         path: Kromx/Deployment/
+    - name: publish data
+      uses: actions/upload-artifact@v2
+      with:
+        name: armorpaint
+        path: build/krom
