@@ -1,4 +1,4 @@
-name: Windows (Direct3D 11)
+name: Windows
 
 on:
   push:
@@ -17,9 +17,9 @@ jobs:
     - uses: actions/checkout@v1
     - name: Get Submodules
       run: git submodule update --init --recursive
-    - name: Get Node.js
+    - name: setup Node.js
       uses: actions/setup-node@v1.4.2
-    - name: install msbuild
+    - name: setup MSbuild
       uses: microsoft/setup-msbuild@v1
     - name: kromx
       run: node Kromx/make -g direct3d11
@@ -28,5 +28,13 @@ jobs:
       with:
         pathSource: Kromx/v8/libraries/win32/release/v8_monolith.7z
         pathTarget: Kromx/v8/libraries/win32/release/
-    - name: Kinc and compile
-      run: cd Kromx;node Kinc/make -g direct3d11 --compile
+    - name: Kinc
+      run: cd Kromx;node Kinc/make -g direct3d11
+    - name: MSbuild
+      run: msbuild Kromx\build\Krom.sln -property:Configuration=Release -verbosity:diag
+    - name: copy build files
+      run: copy-item "Kromx/build/x64/*" "build/Krom" -recurse
+    - name: publish build
+      uses: actions/upload-artifact@v2
+      with:
+        path: build/krom
